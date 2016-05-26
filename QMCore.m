@@ -1,76 +1,79 @@
 function [ ] = QMCore(N,Xstart,Xend,deltaX )
 
-format long
-%define constant
-deltax=.2*10^-9;
-m=9.109*10^-31;
-hbar=6.63*10^-34/(2*pi);
-k=(hbar)^2/(m*(deltax)^2);
-
-%plot potential function V(x)
-syms v(x)
-v(x)=((x-10*10^(-9))^2)*(20*exp(-((x-9*10^(-9))^2)/2)+1);
-subplot(1,3,1);
-ezplot(v(x));
-
-%%%%%%
 m=(Xend-Xstart)/deltaX+1;
-V(m,m)=0;
-x=Xstart:deltaX:Xend;
-for j=1:1:m
-   V(j)=QMV(QMX(j,deltaX,Xstart));
+disp('m=');
+disp(m);
+global matrix;
+ matrix=zeros(m,m);
+c=zeros(1,m);
+syms v(x);
+dx=deltaX;
+v(x)=QMV(x);
+figure
+subplot(2,1,1);
+
+ezplot(v(x),[0,Xend]);
+title('Potential plot ');
+
+matrix=zeros(m,m);
+
+
+c=[Xstart:dx:Xend];
+k=((1.05*(10^(-34)))^2)/(((dx)^2)*(10^-32));
+matrix(1,1)=k+v(Xstart);
+matrix(1,2)=-k;
+
+matrix(m,m-1)=-k;
+matrix(m,m)=k+v(Xend);
+
+for j=2:m-1
+    
+    matrix(j,j)=(k+v(c(j)));
+    matrix(j,(j-1))=(-k/2);
+    matrix(j,(j+1))=(-k/2);  
     
 end
-figure
-plot(x,V,'--');
-msgbox('V(x) is plotted');
 
-A(m,m)=0;
-%create matrix A
-for j=1:1:101
-    if(j>1 && j<m)
-        A(j,j)=k+QMV(QMX(j,deltaX,Xstart));
-        A(j,j-1)=-k/2;
-        A(j,j+1)=-k/2;
+matrix3=matrix;
+[V,D]=eig(matrix3);
+disp('--');
+figure
+
+%disp(V);
+subplot(4,1,1)
+plot(c,V(:,1));
+title('first wave');
+
+figure
+
+
+for l=1:m-1
+    for i=1:m-1
+        if D(i,i)>D(i+1,i+1)
+            f=D(i,i);
+            D(i,i)=D(i+1,i+1);
+            D(i+1,i+1)=f;
+            p=V(:,i);
+            V(:,i)=V(:,i+1);
+            V(:,i+1)=p;
+        end
     end
-    if(j==1)
-        A(j,j)=k+QMV(QMX(j,deltaX,Xstart));
-        A(j,j+1)=-k;
-    end
-    if(j==m)
-        A(j,j)=k+QMV(QMX(j,deltaX,Xstart));
-        A(j,j-1)=-k;
-    end
-    
-    
 end
-%calculate eigen values and eigen vectors
-[V,D]=eig(A);
-disp('eigen value--------------');
-disp(V);
-
-disp('eigen vector-------------');
-
-disp(D);
-EV=V(N,:);
+subplot(2,2,1)
+plot(c,V(:,1));
+title('first ');
+subplot(2,2,2)
+plot(c,V(:,2));
+title('second');
+subplot(2,2,3)
+plot(c,V(:,3));
+title('third');
+subplot(2,2,4)
+plot(c,V(:,4));
+title('third');
 figure
-x=Xstart:deltaX:Xend;
-plot(x,EV);
-%plot for tolal 
-figure
-
-for i=1:1:m
-EV=V(i,:);
-x=Xstart:deltaX:Xend;
-plot(x,EV);
-hold on
-end
-
-
-
-
-
-
-
+subplot(1,2,1)
+plot(c,V(:,N));
+title('N th wave');
 end
 

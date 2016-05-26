@@ -55,6 +55,7 @@ function QMGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for QMGUI
 handles.output = hObject;
 
+
 % Update handles structure
 guidata(hObject, handles);
   axes('Position',[0.3,0.7,0.4,.35])
@@ -74,6 +75,9 @@ function varargout = QMGUI_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+clc
+clear
+
 
 
 
