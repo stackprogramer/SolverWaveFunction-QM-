@@ -6,5 +6,6 @@ this alogorithm solving is in chapter 3 of book Applied Quantum Mechanics: AFJ L
 
 
 #youtube video
+[![QM solver ](img/maxresdefault.jpg)](https://www.youtube.com/watch?v=E3gxa3Pa6I4 "QM")
 
 Designed By stackprogramer
